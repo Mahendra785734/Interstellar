@@ -6,6 +6,8 @@ services:
       - .:/app
     ports:
       - "3000:8080"
+    env_file:
+      - /run/base44/app.env
     environment:
       - PORT=8080
       - NODE_ENV=development
