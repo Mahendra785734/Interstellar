@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" id="tab-favicon" href="/favicon.svg" />
+  <title id="t">Kyzxx Proxy — Watch</title>
+  <link rel="stylesheet" href="/assets/css/kyzxx.css?v=1" />
+  <script src="/assets/mathematics/bundle.js?v=2025-04-15"></script>
+  <script src="/assets/mathematics/config.js?v=2025-04-15"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <main class="kz-main">
+    <h1 class="kz-page-title">Watch</h1>
+    <p style="color:var(--text-muted);margin-bottom:24px;">Video and streaming sites, opened through the proxy.</p>
+    <div class="kz-card-grid" id="watch-grid"></div>
+  </main>
+
+  <script src="/assets/js/mg-pxy.js"></script>
+  <script src="/assets/js/index-3.js"></script>
+  <script src="/assets/languagearts/sj.all.js?v=2025-04-15"></script>
+  <script src="/assets/js/sj-tp.js?v=2025-04-15"></script>
+  <script src="/assets/js/m1.js"></script>
+  <script src="/assets/js/kyzxx-shell.js?v=1"></script>
+  <script>
+    const sites = [
+      { name: "YouTube", icon: "fa-youtube", url: "youtube.com", color: "#ff0000" },
+      { name: "Twitch", icon: "fa-twitch", url: "twitch.tv", color: "#9146ff" },
+      { name: "Netflix", icon: "fa-film", url: "netflix.com", color: "#e50914" },
+      { name: "Crunchyroll", icon: "fa-tv", url: "crunchyroll.com", color: "#f47521" },
+      { name: "Hulu", icon: "fa-play", url: "hulu.com", color: "#1ce783" },
+      { name: "Disney+", icon: "fa-wand-magic-sparkles", url: "disneyplus.com", color: "#0c49b8" },
+      { name: "Prime Video", icon: "fa-amazon", url: "primevideo.com", color: "#00aeef" },
+      { name: "Vimeo", icon: "fa-vimeo", url: "vimeo.com", color: "#1ab7ea" },
+      { name: "Dailymotion", icon: "fa-video", url: "dailymotion.com", color: "#0066dc" },
+    ];
+    document.getElementById("watch-grid").innerHTML = sites.map(s => `
+      <div class="kz-app-card" onclick="go('${s.url}')" role="button" tabindex="0">
+        <div style="display:flex;align-items:center;justify-content:center;height:120px;background:var(--bg-input);">
+          <i class="fa-brands ${s.icon}" style="font-size:36px;color:${s.color};"></i>
+        </div>
+        <div class="kz-app-card-body"><h3>${s.name}</h3></div>
+      </div>
+    `).join("");
+  </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" id="tab-favicon" href="/favicon.svg" />
+  <title id="t">Kyzxx Proxy — Listen</title>
+  <link rel="stylesheet" href="/assets/css/kyzxx.css?v=1" />
+  <script src="/assets/mathematics/bundle.js?v=2025-04-15"></script>
+  <script src="/assets/mathematics/config.js?v=2025-04-15"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <main class="kz-main">
+    <h1 class="kz-page-title">Listen</h1>
+    <p style="color:var(--text-muted);margin-bottom:24px;">Music and audio sites, opened through the proxy.</p>
+    <div class="kz-card-grid" id="listen-grid"></div>
+  </main>
+
+  <script src="/assets/js/mg-pxy.js"></script>
+  <script src="/assets/js/index-3.js"></script>
+  <script src="/assets/languagearts/sj.all.js?v=2025-04-15"></script>
+  <script src="/assets/js/sj-tp.js?v=2025-04-15"></script>
+  <script src="/assets/js/m1.js"></script>
+  <script src="/assets/js/kyzxx-shell.js?v=1"></script>
+  <script>
+    const sites = [
+      { name: "Spotify", icon: "fa-spotify", url: "open.spotify.com", color: "#1db954" },
+      { name: "SoundCloud", icon: "fa-soundcloud", url: "soundcloud.com", color: "#ff5500" },
+      { name: "Pandora", icon: "fa-music", url: "pandora.com", color: "#3668ff" },
+      { name: "Apple Music", icon: "fa-apple", url: "music.apple.com", color: "#fa57c1" },
+      { name: "Bandcamp", icon: "fa-bandcamp", url: "bandcamp.com", color: "#629aa9" },
+      { name: "Tidal", icon: "fa-water", url: "tidal.com", color: "#000000" },
+      { name: "Last.fm", icon: "fa-lastfm", url: "last.fm", color: "#d51007" },
+      { name: "Deezer", icon: "fa-headphones", url: "deezer.com", color: "#a238ff" },
+      { name: "Genius", icon: "fa-quote-left", url: "genius.com", color: "#ffff64" },
+    ];
+    document.getElementById("listen-grid").innerHTML = sites.map(s => `
+      <div class="kz-app-card" onclick="go('${s.url}')" role="button" tabindex="0">
+        <div style="display:flex;align-items:center;justify-content:center;height:120px;background:var(--bg-input);">
+          <i class="fa-brands ${s.icon}" style="font-size:36px;color:${s.color};"></i>
+        </div>
+        <div class="kz-app-card-body"><h3>${s.name}</h3></div>
+      </div>
+    `).join("");
+  </script>
+</body>
+</html>

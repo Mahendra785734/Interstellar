@@ -1,0 +1,74 @@
+:root {
+  --credits-bg: #1a1a2e;
+  --credits-card: #16213e;
+  --credits-text: #e0e0e0;
+  --credits-link: #ffb020;
+  --credits-heading: #fff;
+  --credits-border: rgba(255, 255, 255, 0.08);
+}
+
+.credits-container {
+  max-width: 720px;
+  margin: 80px auto 40px;
+  padding: 0 20px;
+  font-family: "Inter", sans-serif;
+  color: var(--credits-text);
+}
+
+.credits-container h1 {
+  color: var(--credits-heading);
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.credits-intro {
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.credits-section {
+  background: var(--credits-card);
+  border: 1px solid var(--credits-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.credits-section h2 {
+  color: var(--credits-heading);
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.credits-section h2 i {
+  color: var(--credits-link);
+  margin-right: 8px;
+}
+
+.credits-section p {
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.credits-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.credits-section ul li {
+  padding: 6px 0;
+  line-height: 1.5;
+}
+
+.credits-section a {
+  color: var(--credits-link);
+  text-decoration: none;
+}
+
+.credits-section a:hover {
+  text-decoration: underline;
+}
+
+.credits-section strong {
+  color: var(--credits-heading);
+}

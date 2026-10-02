@@ -1,57 +1,108 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="referrer" content="no-referrer" />
-  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-  <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-  <title id="t">Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/assets/css/global.css?v=6" />
-  <link rel="stylesheet" href="/assets/css/container.css?v=2" />
-  <link rel="stylesheet" href="/assets/css/nav.css?v=01" />
-  <script src="/assets/js/mg-pxy.js"></script>
-  <script src="/assets/js/index-3.js"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6840529569014734"
-    crossorigin="anonymous"></script>
+  <link rel="shortcut icon" id="tab-favicon" href="/favicon.svg" />
+  <title id="t">Kyzxx Proxy — Play</title>
+  <link rel="stylesheet" href="/assets/css/kyzxx.css?v=1" />
+  <script src="/assets/mathematics/bundle.js?v=2025-04-15"></script>
+  <script src="/assets/mathematics/config.js?v=2025-04-15"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
-  <div class="f-nav"></div>
-  <div class="input-c">
-    <input type="text" id="search" onkeyup="bar()" placeholder="Search" />
-    <select id="category" name="category" onchange="category()">
-      <option value="all">&#65;&#108;&#108;</option>
-      <option value="android">
-        &#65;&#110;&#100;&#114;&#111;&#105;&#100;&#32;&#69;&#109;&#117;&#108;&#97;&#116;&#111;&#114;</option>
-      <option value="2P">&#77;&#117;&#108;&#116;&#105;&#112;&#108;&#97;&#121;&#101;&#114;</option>
-      <option value="sports">&#83;&#112;&#111;&#114;&#116;&#115;</option>
-      <option value="flash">&#70;&#108;&#97;&#115;&#104;</option>
-      <option value="emu">&#69;&#109;&#117;&#108;&#97;&#116;&#111;&#114;</option>
-      <option value="local">&#76;&#111;&#99;&#97;&#108;</option>
+  <main class="kz-main">
+    <h1 class="kz-page-title">Play</h1>
+
+    <!-- Search + category filter -->
+    <form id="fv" class="kz-search-bar" method="POST" onsubmit="return false;">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input id="input" type="text" placeholder="Search games…" autocomplete="off" oninput="filterCards()" />
+    </form>
+
+    <select id="category" class="kz-btn" style="margin-bottom:16px;" onchange="filterCards()">
+      <option value="all">All</option>
+      <option value="2P">Multiplayer</option>
+      <option value="sports">Sports</option>
+      <option value="flash">Flash</option>
+      <option value="emu">Emulator</option>
+      <option value="local">Local</option>
     </select>
-  </div>
-  <div class="pinned"></div>
-  <div class="apps"></div>
-  <script src="/assets/js/c1.js?v=001"></script>
-  <script src="./assets/mathematics/bundle.js?v=2025-04-15"></script>
-  <script src="./assets/mathematics/config.js?v=2025-04-15"></script>
+
+    <!-- Game sources -->
+    <h2 class="kz-section-heading">Game Sources</h2>
+    <div class="kz-source-row" id="sources"></div>
+
+    <!-- Games grid -->
+    <h2 class="kz-section-heading">All Games</h2>
+    <div class="kz-card-grid" id="games-grid"></div>
+  </main>
+
+  <script src="/assets/js/mg-pxy.js"></script>
+  <script src="/assets/js/index-3.js"></script>
+  <script src="/assets/languagearts/sj.all.js?v=2025-04-15"></script>
+  <script src="/assets/js/sj-tp.js?v=2025-04-15"></script>
   <script src="/assets/js/m1.js"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKJQ5QHQTJ"></script>
-  <!-- DO NOT REMOVE-->
+  <script src="/assets/js/kyzxx-shell.js?v=1"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
+    let allGames = [];
+
+    // Game sources — opened through the proxy, not rehosted
+    const sources = [
+      { name: "Truffled", url: "truffled.lol", desc: "Game collection" },
+      { name: "GN Math", url: "gn-math.github.io", desc: "Math games" },
+      { name: "Wasm.rip", url: "wasm.rip", desc: "WASM games" },
+      { name: "EduRock", url: "www.edurock.org", desc: "Educational games" },
+      { name: "Selenite", url: "selenite.cc", desc: "Game hub" },
+      { name: "Velara", url: "velara.cc", desc: "Game hub" },
+    ];
+
+    document.getElementById("sources").innerHTML = sources.map(s => `
+      <div class="kz-source-card" onclick="go('${s.url}')" role="button" tabindex="0">
+        <h4>${s.name}</h4>
+        <p>${s.desc}</p>
+      </div>
+    `).join("");
+
+    // Load existing games from JSON
+    fetch("/assets/json/g.json").then(r => r.json()).then(data => {
+      allGames = data.filter(g => !g.name.startsWith("!"));
+      renderGames(allGames);
+    });
+
+    function renderGames(list) {
+      const grid = document.getElementById("games-grid");
+      if (list.length === 0) {
+        grid.innerHTML = `<p style="color:var(--text-muted);">No games found.</p>`;
+        return;
+      }
+      grid.innerHTML = list.map(g => `
+        <div class="kz-app-card" onclick="handleClick(${JSON.stringify(g).replace(/"/g, '"')})" role="button" tabindex="0">
+          <img src="${g.image || ''}" alt="${g.name}" loading="lazy" onerror="this.style.display='none'" />
+          <div class="kz-app-card-body">
+            <h3>${g.name}</h3>
+          </div>
+        </div>
+      `).join("");
     }
-    gtag("js", new Date());
 
-    gtag("config", "G-WKJQ5QHQTJ");
+    function handleClick(app) {
+      if (app.say) alert(app.say);
+      if (app.link) go(app.link);
+    }
+
+    function filterCards() {
+      const query = document.getElementById("input").value.toLowerCase();
+      const cat = document.getElementById("category").value;
+      let filtered = allGames;
+      if (cat !== "all") filtered = filtered.filter(g => g.categories && g.categories.includes(cat));
+      if (query) filtered = filtered.filter(g => g.name.toLowerCase().includes(query));
+      renderGames(filtered);
+    }
   </script>
-  <!-- DO NOT REMOVE-->
 </body>
-
 </html>

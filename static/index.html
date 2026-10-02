@@ -6,50 +6,130 @@
   <meta name="referrer" content="no-referrer" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-  <title id="t">Home</title>
-  <link rel="stylesheet" href="/assets/css/global.css?v=6" />
-  <link rel="stylesheet" href="/assets/css/h.css?v=01" />
-  <link rel="stylesheet" href="/assets/css/nav.css?v=01" />
+  <link rel="shortcut icon" id="tab-favicon" href="/favicon.svg" />
+  <title id="t">Kyzxx Proxy</title>
+  <link rel="stylesheet" href="/assets/css/kyzxx.css?v=1" />
+  <script src="/assets/mathematics/bundle.js?v=2025-04-15"></script>
+  <script src="/assets/mathematics/config.js?v=2025-04-15"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6840529569014734"
-    crossorigin="anonymous"></script>
 </head>
 
-<body class="center" onload="SplashT">
-  <div class="f-nav"></div>
-  <div id="particles-js">
-    <script rel="preload" src="https://cdn.jsdelivr.net/particles.js/2.0.0/"></script>
-    <div class="main">
-      <h1 class="title">&#73;&#110;&#116;&#101;&#114;&#115;&#116;&#101;&#108;&#108;&#97;&#114;</h1>
-      <p id="splash"></p>
-      <div class="search-container">
-        <form id="fv" method="POST">
-          <input id="input" class="truncate" placeholder="Search or enter a URL" type="text" />
-        </form>
+<body>
+  <!-- Shell injected by kyzxx-shell.js -->
+
+  <main class="kz-main">
+    <h1 class="kz-page-title" id="greeting">Welcome back</h1>
+
+    <!-- Live status -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
+      <div class="kz-status">
+        <span class="kz-status-dot" id="status-dot"></span>
+        <span id="status-text">Checking connection…</span>
+      </div>
+      <div class="kz-status">
+        <i class="fa-solid fa-server" style="color:var(--accent);"></i>
+        <span id="server-name">Scramjet</span>
+      </div>
+      <div class="kz-status">
+        <i class="fa-solid fa-bolt" style="color:var(--accent);"></i>
+        <span id="latency">— ms</span>
       </div>
     </div>
-  </div>
+
+    <!-- Search bar -->
+    <form id="fv" class="kz-search-bar" method="POST">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input id="input" type="text" placeholder="Search or enter a URL…" autocomplete="off" />
+    </form>
+
+    <!-- Quick access -->
+    <h2 class="kz-section-heading">Quick Access</h2>
+    <div class="kz-card-grid" id="quick-access"></div>
+
+    <!-- History -->
+    <h2 class="kz-section-heading">Recent History</h2>
+    <div class="kz-card" id="history-list">
+      <p style="color:var(--text-muted);font-size:0.85rem;">No history yet. Start browsing to see recent visits here.</p>
+    </div>
+  </main>
+
+  <!-- Proxy scripts -->
   <script src="/assets/js/mg-pxy.js"></script>
-  <script src="assets/js/index-3.js"></script>
-  <script src="/assets/js/h1.js"></script>
-  <script src="./assets/mathematics/bundle.js?v=2025-04-15"></script>
-  <script src="./assets/mathematics/config.js?v=2025-04-15"></script>
+  <script src="/assets/js/index-3.js"></script>
   <script src="/assets/languagearts/sj.all.js?v=2025-04-15"></script>
   <script src="/assets/js/sj-tp.js?v=2025-04-15"></script>
   <script src="/assets/js/m1.js"></script>
-  <!-- DO NOT REMOVE-->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKJQ5QHQTJ"></script>
+  <!-- Shell -->
+  <script src="/assets/js/kyzxx-shell.js?v=1"></script>
+
   <script>
-    window.dataLayer = window.dataLayer || []
-    function gtag() {
-      dataLayer.push(arguments)
-    }
-    gtag("js", new Date())
+    // Greeting based on time of day
+    (function () {
+      const h = new Date().getHours();
+      let greet = "Welcome back";
+      if (h < 12) greet = "Good morning";
+      else if (h < 18) greet = "Good afternoon";
+      else greet = "Good evening";
+      document.getElementById("greeting").textContent = greet;
+    })();
 
-    gtag("config", "G-WKJQ5QHQTJ")
+    // Quick access cards
+    (function () {
+      const sites = [
+        { name: "YouTube", icon: "fa-youtube", url: "youtube.com" },
+        { name: "Reddit", icon: "fa-reddit", url: "reddit.com" },
+        { name: "Twitch", icon: "fa-twitch", url: "twitch.tv" },
+        { name: "Spotify", icon: "fa-spotify", url: "open.spotify.com" },
+        { name: "GitHub", icon: "fa-github", url: "github.com" },
+        { name: "Wikipedia", icon: "fa-wikipedia-w", url: "wikipedia.org" },
+      ];
+      const grid = document.getElementById("quick-access");
+      grid.innerHTML = sites.map(s => `
+        <div class="kz-app-card" onclick="go('${s.url}')" role="button" tabindex="0">
+          <div style="display:flex;align-items:center;justify-content:center;height:120px;background:var(--bg-input);">
+            <i class="fa-brands ${s.icon}" style="font-size:36px;color:var(--accent);"></i>
+          </div>
+          <div class="kz-app-card-body"><h3>${s.name}</h3></div>
+        </div>
+      `).join("");
+    })();
+
+    // Connection status + latency
+    (function () {
+      const dot = document.getElementById("status-dot");
+      const text = document.getElementById("status-text");
+      const latencyEl = document.getElementById("latency");
+
+      async function check() {
+        const start = performance.now();
+        try {
+          await fetch("/ca/", { method: "HEAD" });
+          const ms = Math.round(performance.now() - start);
+          dot.className = "kz-status-dot";
+          text.textContent = "Connected";
+          latencyEl.textContent = ms + " ms";
+        } catch {
+          dot.className = "kz-status-dot offline";
+          text.textContent = "Offline";
+          latencyEl.textContent = "— ms";
+        }
+      }
+      check();
+      setInterval(check, 30000);
+    })();
+
+    // History from localStorage
+    (function () {
+      const hist = JSON.parse(localStorage.getItem("kz-history") || "[]");
+      const el = document.getElementById("history-list");
+      if (hist.length === 0) return;
+      el.innerHTML = hist.slice(0, 10).map(h => `
+        <div class="kz-history-item" onclick="go('${h.url}')" role="button" tabindex="0">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>${h.title || h.url}</span>
+        </div>
+      `).join("");
+    })();
   </script>
-  <!-- DO NOT REMOVE-->
 </body>
-
 </html>

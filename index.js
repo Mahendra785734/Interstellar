@@ -13,6 +13,9 @@ import mime from "mime";
 import fetch from "node-fetch";
 // import { setupMasqr } from "./Masqr.js";
 import config from "./config.js";
+import { authMiddleware, setupAuth } from "./server/auth.js";
+import { setupChatHTTP, createChatWss } from "./server/chat.js";
+import { setupAI } from "./server/ai.js";
 
 console.log(chalk.yellow("🚀 Starting server..."));
 
@@ -98,6 +101,12 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Auth, chat, and AI APIs
+app.use(authMiddleware);
+setupAuth(app);
+setupChatHTTP(app);
+setupAI(app);
+
 /* if (process.env.MASQR === "true") {
   console.log(chalk.green("Masqr is enabled"));
   setupMasqr(app);
@@ -125,6 +134,11 @@ const routes = [
   { path: "/play.html", file: "games.html" },
   { path: "/c", file: "settings.html" },
   { path: "/d", file: "tabs.html" },
+  { path: "/chat", file: "chat.html" },
+  { path: "/ai", file: "ai.html" },
+  { path: "/listen", file: "listen.html" },
+  { path: "/watch", file: "watch.html" },
+  { path: "/credits", file: "credits.html" },
   { path: "/", file: "index.html" },
 ];
 
@@ -152,9 +166,13 @@ server.on("request", (req, res) => {
   }
 });
 
+const chatWss = createChatWss();
+
 server.on("upgrade", (req, socket, head) => {
   if (bareServer.shouldRoute(req)) {
     bareServer.routeUpgrade(req, socket, head);
+  } else if (chatWss.handleUpgrade(req, socket, head)) {
+    // chat WebSocket handled
   } else {
     wisp.routeRequest(req, socket, head);
   }

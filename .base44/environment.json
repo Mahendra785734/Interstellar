@@ -2,5 +2,5 @@
   "previewPort": 3000,
   "healthPath": "/",
   "startCommand": "docker compose -f docker-compose.base44.yml up -d",
-  "secrets": []
+  "secrets": [{"name": "AI_API_KEY", "description": "API key for the AI chat feature (OpenAI-compatible). Get it from your AI provider's dashboard (e.g. https://platform.openai.com/api-keys). Without it, the AI page shows a 'not configured' message.", "requiredAtBoot": false}]
 }

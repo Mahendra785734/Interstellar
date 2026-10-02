@@ -1,62 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="referrer" content="no-referrer" />
-  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-  <link rel="shortcut icon" id="tab-favicon" href="favicon.png" />
-  <title id="t">Home</title>
-  <script src="./assets/mathematics/bundle.js?v=2025-04-15"></script>
-  <script src="./assets/mathematics/config.js?v=2025-04-15"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/assets/css/global.css?v=6" />
-  <link rel="stylesheet" href="/assets/css/container.css?v=2" />
-  <link rel="stylesheet" href="/assets/css/nav.css?v=01" />
-  <script src="/assets/js/mg-pxy.js"></script>
-  <script src="/assets/js/index-3.js"></script>
+  <link rel="shortcut icon" id="tab-favicon" href="/favicon.svg" />
+  <title id="t">Kyzxx Proxy — Apps</title>
+  <link rel="stylesheet" href="/assets/css/kyzxx.css?v=1" />
+  <script src="/assets/mathematics/bundle.js?v=2025-04-15"></script>
+  <script src="/assets/mathematics/config.js?v=2025-04-15"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6840529569014734"
-    crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <div class="f-nav"></div>
-  <div class="input-c">
-    <input type="text" id="search" onkeyup="bar()" placeholder="Search" />
-    <select title="Category" id="category" name="category" onchange="category()">
-      <option value="all">&#65;&#108;&#108;</option>
-      <option value="android">
-        &#65;&#110;&#100;&#114;&#111;&#105;&#100;&#32;&#69;&#109;&#117;&#108;&#97;&#116;&#111;&#114;</option>
-      <option value="social">&#83;&#111;&#99;&#105;&#97;&#108;</option>
-      <option value="stream">&#83;&#116;&#114;&#101;&#97;&#109;</option>
-      <option value="message">&#77;&#101;&#115;&#115;&#97;&#103;&#101;</option>
-      <option value="media">&#84;&#86;&#32;&amp;&#32;&#77;&#111;&#118;&#105;&#101;&#115;</option>
-      <option value="game">&#71;&#97;&#109;&#101;&#32;&#83;&#105;&#116;&#101;&#115;</option>
-      <option value="cloud">&#67;&#108;&#111;&#117;&#100;&#32;&#71;&#97;&#109;&#105;&#110;&#103;</option>
-      <option value="tool">&#84;&#111;&#111;&#108;&#115;</option>
-      <option value="ai">&#65;&#73;</option>
-      <option value="emu">&#69;&#109;&#117;&#108;&#97;&#116;&#111;&#114;</option>
-      <option value="mail">&#77;&#97;&#105;&#108;</option>
+  <main class="kz-main">
+    <h1 class="kz-page-title">Apps</h1>
+
+    <form id="fv" class="kz-search-bar" method="POST" onsubmit="return false;">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input id="input" type="text" placeholder="Search apps…" autocomplete="off" oninput="filterCards()" />
+    </form>
+
+    <select id="category" class="kz-btn" style="margin-bottom:16px;" onchange="filterCards()">
+      <option value="all">All</option>
+      <option value="social">Social</option>
+      <option value="stream">Stream</option>
+      <option value="message">Message</option>
+      <option value="media">TV & Movies</option>
+      <option value="game">Game Sites</option>
+      <option value="cloud">Cloud Gaming</option>
+      <option value="tool">Tools</option>
+      <option value="ai">AI</option>
+      <option value="emu">Emulator</option>
+      <option value="mail">Mail</option>
     </select>
-  </div>
-  <div class="pinned"></div>
-  <div class="apps"></div>
-  <script src="assets/js/c1.js?v=001"></script>
+
+    <div class="kz-card-grid" id="apps-grid"></div>
+  </main>
+
+  <script src="/assets/js/mg-pxy.js"></script>
+  <script src="/assets/js/index-3.js"></script>
+  <script src="/assets/languagearts/sj.all.js?v=2025-04-15"></script>
+  <script src="/assets/js/sj-tp.js?v=2025-04-15"></script>
   <script src="/assets/js/m1.js"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-WKJQ5QHQTJ"></script>
-  <!-- DO NOT REMOVE-->
+  <script src="/assets/js/kyzxx-shell.js?v=1"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
+    let allApps = [];
+
+    fetch("/assets/json/a.json").then(r => r.json()).then(data => {
+      allApps = data.filter(a => !a.name.startsWith("!"));
+      renderApps(allApps);
+    });
+
+    function renderApps(list) {
+      const grid = document.getElementById("apps-grid");
+      if (list.length === 0) {
+        grid.innerHTML = `<p style="color:var(--text-muted);">No apps found.</p>`;
+        return;
+      }
+      grid.innerHTML = list.map(a => `
+        <div class="kz-app-card" onclick="handleClick(${JSON.stringify(a).replace(/"/g, '"')})" role="button" tabindex="0">
+          <img src="${a.image || ''}" alt="${a.name}" loading="lazy" onerror="this.style.display='none'" />
+          <div class="kz-app-card-body">
+            <h3>${a.name}</h3>
+          </div>
+        </div>
+      `).join("");
     }
-    gtag("js", new Date());
 
-    gtag("config", "G-WKJQ5QHQTJ");
+    function handleClick(app) {
+      if (app.say) alert(app.say);
+      if (app.link) go(app.link);
+    }
+
+    function filterCards() {
+      const query = document.getElementById("input").value.toLowerCase();
+      const cat = document.getElementById("category").value;
+      let filtered = allApps;
+      if (cat !== "all") filtered = filtered.filter(a => a.categories && a.categories.includes(cat));
+      if (query) filtered = filtered.filter(a => a.name.toLowerCase().includes(query));
+      renderApps(filtered);
+    }
   </script>
-  <!-- DO NOT REMOVE-->
 </body>
-
 </html>

@@ -1,0 +1,418 @@
+/* ===== Kyzxx Proxy — Design System ===== */
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap");
+
+:root {
+  /* Accent */
+  --accent: #ff9a1a;
+  --accent-grad: linear-gradient(135deg, #ffb020, #ff7a1a);
+  --accent-soft: rgba(255, 154, 26, 0.12);
+  --accent-hover: rgba(255, 154, 26, 0.2);
+
+  /* Dark theme (default) */
+  --bg: #0f0f17;
+  --bg-elev: #1a1a2e;
+  --bg-card: #16162a;
+  --bg-input: #1e1e38;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --text: #e8e8f0;
+  --text-muted: #8888a0;
+  --text-dim: #555568;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-xs: 8px;
+  --sidebar-w: 72px;
+  --transition: 0.2s ease;
+}
+
+:root[data-theme="light"] {
+  --bg: #f5f5fa;
+  --bg-elev: #ffffff;
+  --bg-card: #ffffff;
+  --bg-input: #eeeef5;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.14);
+  --text: #1a1a2e;
+  --text-muted: #666680;
+  --text-dim: #9999b0;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Sora", system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Sidebar ===== */
+.kz-sidebar {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--bg-elev);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  z-index: 200;
+}
+
+.kz-sidebar-logo {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: var(--accent-grad);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.kz-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 0 12px;
+  flex: 1;
+}
+
+.kz-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 0;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+
+.kz-nav-item:hover { color: var(--text); background: var(--accent-soft); }
+
+.kz-nav-item.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.kz-nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+}
+
+.kz-nav-item i { font-size: 20px; }
+.kz-nav-item span { font-size: 9px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.kz-nav-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.kz-theme-toggle {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: var(--transition);
+}
+
+.kz-theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ===== Main content ===== */
+.kz-main {
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  padding: 32px;
+}
+
+.kz-page-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+/* ===== Cards ===== */
+.kz-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: var(--transition);
+}
+
+.kz-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow);
+}
+
+.kz-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.kz-app-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.kz-app-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.kz-app-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  background: var(--bg-input);
+}
+
+.kz-app-card-body { padding: 12px; }
+.kz-app-card-body h3 { font-size: 0.85rem; font-weight: 500; }
+.kz-app-card-body p { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+/* ===== Search ===== */
+.kz-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  margin-bottom: 24px;
+  transition: var(--transition);
+}
+
+.kz-search-bar:focus-within { border-color: var(--accent); }
+.kz-search-bar i { color: var(--text-muted); font-size: 18px; }
+.kz-search-bar input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+.kz-search-bar input::placeholder { color: var(--text-dim); }
+
+/* ===== Buttons ===== */
+.kz-btn {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kz-btn:hover { border-color: var(--border-strong); }
+.kz-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.kz-btn-primary {
+  background: var(--accent-grad);
+  border: none;
+  color: #fff;
+}
+
+.kz-btn-primary:hover { opacity: 0.9; }
+
+.kz-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ===== Status pill ===== */
+.kz-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 100px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.kz-status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+}
+
+.kz-status-dot.offline { background: #ef4444; }
+
+/* ===== History list ===== */
+.kz-history-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.kz-history-item:hover { background: var(--bg-input); color: var(--text); }
+.kz-history-item i { font-size: 14px; color: var(--text-dim); }
+
+/* ===== Game sources ===== */
+.kz-source-row {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+}
+
+.kz-source-card {
+  min-width: 160px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.kz-source-card:hover { border-color: var(--accent); }
+.kz-source-card h4 { font-size: 0.85rem; font-weight: 500; margin-bottom: 4px; }
+.kz-source-card p { font-size: 0.7rem; color: var(--text-dim); }
+
+/* ===== Section heading ===== */
+.kz-section-heading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 24px 0 12px;
+}
+
+/* ===== Mobile bottom bar ===== */
+.kz-bottom-bar {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--bg-elev);
+  border-top: 1px solid var(--border);
+  padding: 8px 4px;
+  z-index: 200;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.kz-bottom-bar .kz-nav-item { padding: 8px 4px; }
+.kz-bottom-bar .kz-nav-item span { font-size: 8px; }
+.kz-bottom-bar .kz-nav-item.active::before { display: none; }
+
+@media (max-width: 768px) {
+  .kz-sidebar { display: none; }
+  .kz-main { margin-left: 0; padding: 16px 16px 80px; }
+  .kz-bottom-bar { display: flex; }
+}
+
+/* ===== Chat ===== */
+.kz-chat-layout { display: flex; gap: 16px; height: calc(100vh - 140px); }
+.kz-chat-sidebar { width: 240px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+.kz-chat-main { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.kz-chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; }
+.kz-chat-msg { padding: 10px 14px; border-radius: var(--radius-sm); max-width: 80%; word-break: break-word; }
+.kz-chat-msg.self { background: var(--accent-soft); margin-left: auto; }
+.kz-chat-msg.other { background: var(--bg-input); }
+.kz-chat-msg .author { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 2px; }
+.kz-chat-input { display: flex; gap: 8px; }
+.kz-chat-input input { flex: 1; }
+
+/* ===== AI ===== */
+.kz-ai-layout { display: flex; flex-direction: column; height: calc(100vh - 140px); }
+.kz-ai-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+
+/* ===== Browse (tabs) ===== */
+.kz-browse-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.kz-browse-bar button { padding: 8px 10px; font-size: 0.85rem; }
+.kz-browse-bar input { flex: 1; }
+
+/* ===== Forms ===== */
+.kz-form { display: flex; flex-direction: column; gap: 16px; max-width: 400px; }
+.kz-form-group { display: flex; flex-direction: column; gap: 6px; }
+.kz-form-group label { font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
+.kz-form-group input, .kz-form-group select {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition);
+}
+.kz-form-group input:focus, .kz-form-group select:focus { border-color: var(--accent); }
+.kz-form-group input:focus-visible, .kz-form-group select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.kz-checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-muted); }
+.kz-checkbox-row input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+.kz-error { color: #ef4444; font-size: 0.8rem; }
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* ===== Loading skeleton ===== */
+.kz-skeleton {
+  background: linear-gradient(90deg, var(--bg-input) 25%, var(--bg-card) 50%, var(--bg-input) 75%);
+  background-size: 200% 100%;
+  animation: kz-shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes kz-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ===== Hide old nav ===== */
+.f-nav { display: none !important; }

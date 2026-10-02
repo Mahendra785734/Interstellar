@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" id="tab-favicon" href="/favicon.svg" />
+  <title id="t">Kyzxx Proxy — AI</title>
+  <link rel="stylesheet" href="/assets/css/kyzxx.css?v=1" />
+  <script src="/assets/mathematics/bundle.js?v=2025-04-15"></script>
+  <script src="/assets/mathematics/config.js?v=2025-04-15"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+  <main class="kz-main">
+    <h1 class="kz-page-title">AI</h1>
+
+    <div class="kz-card kz-ai-layout" style="padding:16px;">
+      <div class="kz-ai-messages" id="ai-messages">
+        <div class="kz-chat-msg other">
+          <div class="author">Kyzxx AI</div>
+          Hello! Ask me anything. (AI service requires an API key to be configured.)
+        </div>
+      </div>
+      <div class="kz-chat-input">
+        <input type="text" id="ai-input" style="flex:1;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);font-family:inherit;font-size:0.9rem;outline:none;" placeholder="Ask anything…" />
+        <button class="kz-btn kz-btn-primary" onclick="sendAi()" id="ai-send"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </main>
+
+  <script src="/assets/js/mg-pxy.js"></script>
+  <script src="/assets/js/index-3.js"></script>
+  <script src="/assets/js/m1.js"></script>
+  <script src="/assets/js/kyzxx-shell.js?v=1"></script>
+  <script>
+    let aiMessages = [
+      { role: "system", content: "You are Kyzxx AI, a helpful assistant." }
+    ];
+
+    async function sendAi() {
+      const input = document.getElementById("ai-input");
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMsg("You", text, "self");
+      aiMessages.push({ role: "user", content: text });
+      input.value = "";
+      document.getElementById("ai-send").disabled = true;
+
+      const loadingDiv = addMsg("Kyzxx AI", '<i class="fa-solid fa-circle-notch fa-spin"></i> Thinking…', "other");
+
+      try {
+        const res = await fetch("/api/ai/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: aiMessages }),
+        });
+        const data = await res.json();
+        loadingDiv.innerHTML = `<div class="author">Kyzxx AI</div>${escapeHtml(data.reply || data.error || "No response.")}`;
+        aiMessages.push({ role: "assistant", content: data.reply || "" });
+      } catch (err) {
+        loadingDiv.innerHTML = `<div class="author">Kyzxx AI</div>Failed to reach AI service.`;
+      }
+
+      document.getElementById("ai-send").disabled = false;
+    }
+
+    document.getElementById("ai-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") sendAi();
+    });
+
+    function addMsg(author, content, cls) {
+      const el = document.getElementById("ai-messages");
+      const div = document.createElement("div");
+      div.className = `kz-chat-msg ${cls}`;
+      div.innerHTML = `<div class="author">${author}</div>${content}`;
+      el.appendChild(div);
+      el.scrollTop = el.scrollHeight;
+      return div;
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement("div");
+      d.textContent = s;
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>
