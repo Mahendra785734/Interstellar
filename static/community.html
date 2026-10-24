@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b12">
+<title>Community · Interstellar</title>
+<style>
+:root{color-scheme:dark;--bg:#080b12;--panel:#111722;--line:#263244;--muted:#9aa8bd;--text:#f4f7fb;--accent:#8b7cff;--accent2:#54d8c8;--danger:#ff7d8b}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 15% 10%,#202044 0,transparent 42%),radial-gradient(ellipse at 90% 85%,#12343a 0,transparent 38%),var(--bg);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
+.shell{width:min(100%,460px)}.brand{display:flex;align-items:center;gap:11px;margin-bottom:22px}.logo{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));font-weight:900;color:#080b12}.brand strong{display:block;letter-spacing:.08em}.brand small{color:var(--muted)}.card{padding:clamp(22px,5vw,34px);border:1px solid #ffffff1c;border-radius:24px;background:#111722eF;box-shadow:0 24px 80px #0008;backdrop-filter:blur(18px)}.eyebrow{font-size:11px;letter-spacing:.2em;font-weight:800;color:var(--accent2)}h1{font-size:clamp(27px,6vw,34px);line-height:1.12;margin:10px 0}p{color:var(--muted);margin:0 0 22px}.tabs{display:grid;grid-template-columns:1fr 1fr;padding:4px;background:#090d14;border:1px solid var(--line);border-radius:12px;margin:20px 0}.tabs button{border:0;border-radius:9px;background:transparent;color:var(--muted);padding:11px;font:inherit;font-weight:700;cursor:pointer}.tabs button[aria-selected=true]{background:#252b3c;color:var(--text)}label{display:block;margin:15px 0 7px;font-size:13px;font-weight:700;color:#d9e0ed}input{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:11px;background:#090e16;color:var(--text);font:inherit;outline:none}input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #8b7cff25}.remember{display:flex;align-items:center;gap:9px;margin:16px 0;color:var(--muted);font-size:13px}.remember input{width:16px;height:16px;accent-color:var(--accent)}.primary{width:100%;padding:13px 16px;border:0;border-radius:11px;background:linear-gradient(100deg,var(--accent),#6b9cff);color:white;font:inherit;font-weight:800;cursor:pointer;margin-top:5px}.primary:disabled{opacity:.6;cursor:wait}.message{display:none;padding:11px 12px;border-radius:10px;margin:14px 0;font-size:13px;background:#ff7d8b15;border:1px solid #ff7d8b55;color:#ffb4bc}.message.good{background:#54d8c815;border-color:#54d8c855;color:#8df0df}.fine{font-size:12px;text-align:center;margin:18px 0 0;color:#78869b}.fine a{color:#b7afff}.welcome{display:none}.userchip{padding:14px;border:1px solid var(--line);border-radius:13px;background:#0b111b;margin:20px 0;overflow-wrap:anywhere}.userchip b{display:block;font-size:18px}.userchip span{font-size:13px;color:var(--muted)}.secondary{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:#161e2b;color:var(--text);font:inherit;font-weight:700;cursor:pointer}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<main class="shell">
+  <div class="brand"><div class="logo">I</div><div><strong>INTERSTELLAR</strong><small>Community space</small></div></div>
+  <section class="card" id="authCard">
+    <div class="eyebrow">COMMUNITY · CURRENCY · CUSTOMIZATION</div>
+    <h1>Your people, your place.</h1>
+    <p>Join the conversation and make the server your own.</p>
+    <div class="tabs" role="tablist" aria-label="Account options">
+      <button id="loginTab" role="tab" aria-selected="true" type="button">Sign in</button>
+      <button id="registerTab" role="tab" aria-selected="false" type="button">Create account</button>
+    </div>
+    <div id="notice" class="message" role="status" aria-live="polite"></div>
+    <form id="authForm">
+      <div id="usernameField" class="hidden"><label for="username">Username</label><input id="username" name="username" autocomplete="username" minlength="3" maxlength="20" placeholder="Choose a username" /></div>
+      <div id="emailField" class="hidden"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" /></div>
+      <div id="identifierField"><label for="identifier">Username or email</label><input id="identifier" name="identifier" autocomplete="username" placeholder="Username or email" /></div>
+      <label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="128" placeholder="Enter your password" required />
+      <label class="remember"><input id="remember" type="checkbox" name="remember" /> Keep me signed in on this device</label>
+      <button class="primary" id="submitButton" type="submit">Sign in</button>
+    </form>
+    <div class="fine">Use a unique password. Your password is stored as a salted hash, not plain text.</div>
+  </section>
+  <section class="card welcome" id="welcomeCard">
+    <div class="eyebrow">YOU'RE SIGNED IN</div><h1>Welcome to the community.</h1><p>Your account is ready.</p>
+    <div class="userchip"><b id="welcomeName"></b><span id="welcomeEmail"></span></div>
+    <button class="secondary" id="logoutButton" type="button">Sign out</button>
+    <p class="fine"><a href="/">Back to Interstellar</a></p>
+  </section>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let mode = "login";
+  const form = $("authForm"), notice = $("notice");
+  function showMessage(message, good = false) {
+    notice.textContent = message;
+    notice.className = "message" + (good ? " good" : "");
+    notice.style.display = "block";
+  }
+  function clearMessage() { notice.textContent = ""; notice.style.display = "none"; notice.className = "message"; }
+  function setMode(next) {
+    mode = next; clearMessage();
+    const registering = mode === "register";
+    $("loginTab").setAttribute("aria-selected", String(!registering));
+    $("registerTab").setAttribute("aria-selected", String(registering));
+    $("usernameField").classList.toggle("hidden", !registering);
+    $("emailField").classList.toggle("hidden", !registering);
+    $("identifierField").classList.toggle("hidden", registering);
+    $("username").required = registering;
+    $("email").required = registering;
+    $("identifier").required = !registering;
+    $("password").autocomplete = registering ? "new-password" : "current-password";
+    $("password").placeholder = registering ? "At least 8 characters" : "Enter your password";
+    $("submitButton").textContent = registering ? "Create account" : "Sign in";
+  }
+  function showUser(user) {
+    $("authCard").style.display = "none";
+    $("welcomeCard").style.display = "block";
+    $("welcomeName").textContent = "@" + user.username;
+    $("welcomeEmail").textContent = user.email;
+  }
+  async function request(url, body) {
+    const response = await fetch(url, {
+      method: body ? "POST" : "GET",
+      headers: body ? { "Content-Type": "application/json" } : {},
+      credentials: "same-origin",
+      body: body ? JSON.stringify(body) : undefined
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || "Something went wrong. Please try again.");
+    return data;
+  }
+  $("loginTab").addEventListener("click", () => setMode("login"));
+  $("registerTab").addEventListener("click", () => setMode("register"));
+  form.addEventListener("submit", async event => {
+    event.preventDefault(); clearMessage();
+    const button = $("submitButton"); button.disabled = true;
+    try {
+      let data;
+      if (mode === "register") {
+        data = await request("/api/community/register", {
+          username: $("username").value.trim(),
+          email: $("email").value.trim(),
+          password: $("password").value,
+          remember: $("remember").checked
+        });
+      } else {
+        data = await request("/api/community/login", {
+          identifier: $("identifier").value.trim(),
+          password: $("password").value,
+          remember: $("remember").checked
+        });
+      }
+      showUser(data.user);
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
+      button.disabled = false;
+    }
+  });
+  $("logoutButton").addEventListener("click", async () => {
+    try { await request("/api/community/logout", {}); }
+    catch (error) { showMessage(error.message); return; }
+    $("welcomeCard").style.display = "none";
+    $("authCard").style.display = "block";
+    form.reset(); setMode("login"); showMessage("You've signed out.", true);
+  });
+  request("/api/community/me").then(data => showUser(data.user)).catch(() => {});
+  setMode("login");
+})();
+</script>
+</body>
+</html>
