@@ -106,7 +106,23 @@
       }
       showUser(data.user);
     } catch (error) {
-      showMessage(error.message);
+      if (mode === "register" && error.message.toLowerCase().includes("username is already taken")) {
+        const existingUsername = $("username").value.trim();
+        setMode("login");
+        $("identifier").value = existingUsername;
+        $("password").value = "";
+        showMessage("That username already has an account. Enter its password to sign in.");
+        $("password").focus();
+      } else if (mode === "register" && error.message.toLowerCase().includes("email already exists")) {
+        const existingEmail = $("email").value.trim();
+        setMode("login");
+        $("identifier").value = existingEmail;
+        $("password").value = "";
+        showMessage("That email already has an account. Enter its password to sign in.");
+        $("password").focus();
+      } else {
+        showMessage(error.message);
+      }
     } finally {
       button.disabled = false;
     }
