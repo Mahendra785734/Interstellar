@@ -261,6 +261,7 @@ app.use("/bm", express.static(baremuxPath, transportStaticOptions));
 app.use("/ep", express.static(epoxyDistPath, transportStaticOptions));
 
 const routes = [
+  { path: "/community", file: "community.html" },
   { path: "/b", file: "apps.html" },
   { path: "/a", file: "games.html" },
   { path: "/play.html", file: "games.html" },
